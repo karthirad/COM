@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Odds Hub - Interactive Wireframe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+        
+        .trending-section {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .trending-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .fire-icon {
+            font-size: 1.5rem;
+            animation: flicker 1.5s infinite;
+        }
+        
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .trending-match {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .match-info {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .odds-value {
+            color: #00ff88;
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .cta-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .cta-primary {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #ff6b35, #ff8e35);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,107,53,0.4);
+        }
+        
+        .cta-secondary {
+            padding: 12px 24px;
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .odds-table {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .table-header {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+            gap: 15px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .table-row {
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+            gap: 15px;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .table-row:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .sportsbook {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sportsbook-logo {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, #333, #666);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        
+        .odds-cell {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .best-odds {
+            color: #00ff88;
+            position: relative;
+        }
+        
+        .best-odds::after {
+            content: '🔥';
+            margin-left: 5px;
+        }
+        
+        .bonus-badge {
+            background: linear-gradient(45deg, #ff6b35, #ff8e35);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+        
+        .activity-feed {
+            margin-top: 30px;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .activity-item {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            color: black;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .odds-movement {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 10px;
+        }
+        
+        .arrow-up {
+            color: #00ff88;
+        }
+        
+        .arrow-down {
+            color: #ff6b35;
+        }
+        
+        @media (max-width: 768px) {
+            .table-header, .table-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .trending-match {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .filters {
+                justify-content: flex-start;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Live Odds Hub</h1>
+            <p>Best Sports Betting Odds - Updated Live</p>
+        </header>
+        
+        <div class="filters">
+            <button class="filter-btn active" onclick="setActiveFilter(this)">Football</button>
+            <button class="filter-btn" onclick="setActiveFilter(this)">Basketball</button>
+            <button class="filter-btn" onclick="setActiveFilter(this)">Tennis</button>
+            <button class="filter-btn" onclick="setActiveFilter(this)">Today's Games</button>
+            <button class="filter-btn" onclick="setActiveFilter(this)">Popular Markets</button>
+        </div>
+        
+        <div class="trending-section">
+            <div class="trending-title">
+                <span class="fire-icon">🔥</span>
+                <h3>TRENDING NOW</h3>
+            </div>
+            <div class="trending-match">
+                <div class="match-info">
+                    Manchester City vs Arsenal
+                    <span class="odds-value">2.45</span>
+                    <span class="odds-movement">
+                        <span class="arrow-up">↗</span>
+                        <small>+0.05</small>
+                    </span>
+                </div>
+                <div class="cta-group">
+                    <button class="cta-primary" onclick="showNotification('Redirecting to Bet365...')">Bet Now - Bet365</button>
+                    <button class="cta-secondary" onclick="scrollToTable()">Compare All 10 Books</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="odds-table">
+            <div class="table-header">
+                <div>Sportsbook</div>
+                <div>Home Win</div>
+                <div>Draw</div>
+                <div>Away Win</div>
+                <div>Action</div>
+            </div>
+            
+            <div class="table-row" onclick="highlightRow(this)">
+                <div class="sportsbook">
+                    <div class="sportsbook-logo">B365</div>
+                    Bet365
+                    <span class="bonus-badge">€100 Bonus</span>
+                </div>
+                <div class="odds-cell best-odds">2.45</div>
+                <div class="odds-cell">3.20</div>
+                <div class="odds-cell">2.80</div>
+                <div>
+                    <button class="cta-primary" onclick="showNotification('127 users clicked this in last 10 mins!')">Bet Now</button>
+                </div>
+            </div>
+            
+            <div class="table-row" onclick="highlightRow(this)">
+                <div class="sportsbook">
+                    <div class="sportsbook-logo">WH</div>
+                    William Hill
+                    <span class="bonus-badge">€50 Free Bet</span>
+                </div>
+                <div class="odds-cell">2.40</div>
+                <div class="odds-cell best-odds">3.30</div>
+                <div class="odds-cell">2.85</div>
+                <div>
+                    <button class="cta-primary" onclick="showNotification('Great choice! Redirecting...')">Bet Now</button>
+                </div>
+            </div>
+            
+            <div class="table-row" onclick="highlightRow(this)">
+                <div class="sportsbook">
+                    <div class="sportsbook-logo">888</div>
+                    888Sport
+                    <span class="bonus-badge">€30 Welcome</span>
+                </div>
+                <div class="odds-cell">2.35</div>
+                <div class="odds-cell">3.15</div>
+                <div class="odds-cell best-odds">2.90</div>
+                <div>
+                    <button class="cta-primary" onclick="showNotification('Odds just improved!')">Bet Now</button>
+                </div>
+            </div>
+            
+            <div class="table-row" onclick="highlightRow(this)">
+                <div class="sportsbook">
+                    <div class="sportsbook-logo">UB</div>
+                    Unibet
+                </div>
+                <div class="odds-cell">2.38</div>
+                <div class="odds-cell">3.25</div>
+                <div class="odds-cell">2.75</div>
+                <div>
+                    <button class="cta-primary" onclick="showNotification('Redirecting to Unibet...')">Bet Now</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="activity-feed">
+            <h3>Live Activity</h3>
+            <div class="activity-item">🟢 127 users clicked Bet365 in the last hour</div>
+            <div class="activity-item">📈 Arsenal odds improved by 5% in last 10 minutes</div>
+            <div class="activity-item">🎯 Big win: €2,500 payout from William Hill 15 mins ago</div>
+            <div class="activity-item">⚡ 89 users comparing odds for this match right now</div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        function setActiveFilter(btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            showNotification(`Filtering by ${btn.textContent}...`);
+        }
+        
+        function highlightRow(row) {
+            document.querySelectorAll('.table-row').forEach(r => r.style.background = '');
+            row.style.background = 'rgba(0,255,136,0.1)';
+        }
+        
+        function scrollToTable() {
+            document.querySelector('.odds-table').scrollIntoView({ behavior: 'smooth' });
+            showNotification('Showing all sportsbooks...');
+        }
+        
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Simulate live odds updates
+        function updateOdds() {
+            const oddsCells = document.querySelectorAll('.odds-cell');
+            const randomCell = oddsCells[Math.floor(Math.random() * oddsCells.length)];
+            const currentOdds = parseFloat(randomCell.textContent);
+            const newOdds = (currentOdds + (Math.random() - 0.5) * 0.1).toFixed(2);
+            
+            randomCell.textContent = newOdds;
+            randomCell.style.animation = 'pulse 1s ease';
+            
+            setTimeout(() => {
+                randomCell.style.animation = '';
+            }, 1000);
+        }
+        
+        // Update odds every 5 seconds for demo
+        setInterval(updateOdds, 5000);
+        
+        // Show welcome notification
+        setTimeout(() => {
+            showNotification('Live odds updating every 3 seconds!');
+        }, 1000);
+    </script>
+</body>
+</html>
